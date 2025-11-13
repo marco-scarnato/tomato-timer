@@ -1,8 +1,21 @@
 import tkinter as tk
 import pygame
+import sys
+import os
 
 # ============== INIZIALIZZAZIONE ==============
 pygame.mixer.init()
+
+# ============== FUNZIONE PER PERCORSI RISORSE ==============
+def resource_path(relative_path):
+    """Ottiene il percorso assoluto della risorsa, funziona sia in dev che in eseguibile"""
+    try:
+        # PyInstaller crea una cartella temporanea e salva il path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    
+    return os.path.join(base_path, relative_path)
 
 # ============== COSTANTI ==============
 WORK_TIME = 25 * 60  # Timer di lavoro in secondi (25 minuti)
@@ -12,7 +25,8 @@ BREAK_TIME = 5 * 60  # Timer di pausa in secondi (5 minuti)
 BG_COLOR = "#0B1E3F"  # Blu notte come sfondo
 WORK_COLOR = "#FF6A00"  # Arancione brillante per lavoro
 BREAK_COLOR = "#4CAF50"  # Verde per pausa
-
+WORK_GLOW = "#FF8C33"   # Alone arancione
+BREAK_GLOW = "#6FD68F"  # Alone verde chiaro
 BUTTON_BG = "#2D2D2D"
 BUTTON_FG = "#FFFFFF"
 
@@ -33,10 +47,10 @@ def format_time(seconds):
 def play_pause_music():
     """Avvia la musica di pausa in loop"""
     try:
-        pygame.mixer.music.load("assets/pause-theme.ogg")
+        pygame.mixer.music.load(resource_path("assets/pause-theme.ogg"))
         pygame.mixer.music.play(-1)  # -1 = loop infinito
-    except:
-        print("Errore: impossibile caricare assets/pause-theme.ogg")
+    except Exception as e:
+        print(f"Errore: impossibile caricare assets/pause-theme.ogg - {e}")
 
 def stop_pause_music():
     """Ferma la musica di pausa"""
@@ -61,20 +75,23 @@ def draw_progress_ring():
     # Colori in base alla sessione
     if is_work_session:
         ring_color = WORK_COLOR
+        glow_color = WORK_GLOW
     else:
         ring_color = BREAK_COLOR
+        glow_color = BREAK_GLOW
     
     # Disegna alone (glow) - cerchio più grande sotto
     canvas.create_oval(
         center_x - radius - 8, center_y - radius - 8,
         center_x + radius + 8, center_y + radius + 8,
+        outline=glow_color, width=6, fill=""
     )
     
     # Disegna cerchio di sfondo (grigio scuro)
     canvas.create_oval(
         center_x - radius, center_y - radius,
         center_x + radius, center_y + radius,
-        outline= BG_COLOR, width=ring_width, fill=""
+        outline="#1A1A1A", width=ring_width, fill=""
     )
     
     # Disegna arco progressivo
@@ -166,10 +183,10 @@ window.configure(bg=BG_COLOR)
 
 # Imposta il logo come icona della finestra
 try:
-    logo = tk.PhotoImage(file="assets/logo.png")
+    logo = tk.PhotoImage(file=resource_path("assets/logo.png"))
     window.iconphoto(True, logo)
-except:
-    print("Errore: impossibile caricare assets/logo.png")
+except Exception as e:
+    print(f"Errore: impossibile caricare assets/logo.png - {e}")
 
 # Label per indicare il tipo di sessione
 session_label = tk.Label(
