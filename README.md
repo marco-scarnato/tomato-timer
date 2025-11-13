@@ -150,13 +150,4 @@ Questo progetto è distribuito sotto licenza MIT. Vedi il file `LICENSE` per mag
 
 ## 👤 Autore
 
-Il tuo nome - [@tuousername](https://github.com/tuousername)
-
-## 🙏 Ringraziamenti
-
-- Tecnica Pomodoro ideata da Francesco Cirillo
-- Ispirato dalla necessità di migliorare la produttività personale
-
----
-
-⭐ Se questo progetto ti è stato utile, lascia una stella su GitHub!
+Marco Scarnato - [@marco-scarnato](https://github.com/marco-scarnato)
